@@ -1,14 +1,69 @@
-import { ConstructorPage } from '@pages';
+import {
+  ConstructorPage,
+  Feed,
+  Profile,
+  ProfileOrders,
+  Login,
+  Register
+} from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
+import { AppHeader, ProtectedRoute } from '@components';
+import { FC, useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/ingredientsSlice';
+import { restoreUser } from '../../services/userSlice';
+import { Routes, Route } from 'react-router-dom';
 
-import { AppHeader } from '@components';
+const App: FC = () => {
+  const dispatch = useDispatch();
 
-const App = () => (
-  <div className={styles.app}>
-    <AppHeader />
-    <ConstructorPage />
-  </div>
-);
+  useEffect(() => {
+    dispatch(fetchIngredients());
+    dispatch(restoreUser());
+  }, [dispatch]);
+
+  return (
+    <div className={styles.app}>
+      <AppHeader />
+      <Routes>
+        <Route path='/' element={<ConstructorPage />} />
+        <Route path='/feed' element={<Feed />} />
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute>
+              <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;
