@@ -51,19 +51,43 @@ export const getOrders = async (): Promise<TOrdersData> => {
   };
 };
 
+export const getUserOrdersApi = async (): Promise<TOrder[]> => {
+  const accessToken = localStorage.getItem('accessToken')?.trim();
+
+  if (!accessToken) {
+    throw new Error('Для просмотра заказов необходимо войти в аккаунт');
+  }
+  const response = await fetch(`${BURGER_API_URL}/orders`, {
+    method: 'GET',
+    headers: {
+      Authorization: accessToken
+    }
+  });
+  const data = await response.json();
+  if (!response.ok || !data.success || !Array.isArray(data.orders)) {
+    throw new Error(data.message || 'Не удалось загрузить ваши заказы');
+  }
+
+  return data.orders as TOrder[];
+};
+
 export const createOrderApi = async (
   ingredients: string[]
 ): Promise<TOrder> => {
+  const accessToken = localStorage.getItem('accessToken')?.trim();
+  if (!accessToken) {
+    throw new Error('Для оформления заказа необходимо войти в аккаунт');
+  }
   const response = await fetch(`${BURGER_API_URL}/orders`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: accessToken
     },
     body: JSON.stringify({ ingredients })
   });
   if (!response.ok) {
     const errorText = await response.text();
-
     throw new Error(`Ошибка ${response.status}: ${errorText}`);
   }
   const data: TResponse<never> = await response.json();
@@ -194,4 +218,26 @@ export const logoutApi = async (refreshToken: string) => {
   }
 
   return data;
+};
+
+export const updateUserApi = async (
+  userData: { name: string; email: string; password?: string },
+  accessToken: string
+): Promise<TUser> => {
+  const response = await fetch(`${BURGER_API_URL}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: accessToken
+    },
+    body: JSON.stringify(userData)
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success || !data.user) {
+    throw new Error(data.message || 'Не удалось обновить профиль');
+  }
+
+  return data.user as TUser;
 };

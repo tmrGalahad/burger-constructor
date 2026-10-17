@@ -14,6 +14,7 @@ import { useDispatch } from '../../services/store';
 import { fetchIngredients } from '../../services/ingredientsSlice';
 import { restoreUser } from '../../services/userSlice';
 import { Routes, Route } from 'react-router-dom';
+import { OrderInfo } from '../order-info/order-info';
 
 const App: FC = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const App: FC = () => {
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
           path='/profile'
           element={
@@ -42,6 +44,14 @@ const App: FC = () => {
           element={
             <ProtectedRoute>
               <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
             </ProtectedRoute>
           }
         />

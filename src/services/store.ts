@@ -9,12 +9,16 @@ import {
 import ingredientsReducer from './ingredientsSlice';
 import constructorReducer from './constructorSlice';
 import userReducer from './userSlice';
+import ordersReducer from './ordersSlice';
+import feedReducer from './feedSlice';
 
 const store = configureStore({
   reducer: {
     ingredients: ingredientsReducer,
     burgerConstructor: constructorReducer,
-    user: userReducer
+    user: userReducer,
+    orders: ordersReducer,
+    feed: feedReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
