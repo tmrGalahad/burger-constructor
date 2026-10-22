@@ -5,12 +5,14 @@ import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
 import { createOrderApi } from '../../utils/burger-api';
 import { clearConstructor } from '../../services/constructorSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const dispatch = useDispatch();
   const constructorItems = useSelector((state) => state.burgerConstructor);
-
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
   const [orderRequest, setOrderRequest] = useState(false);
   const [orderModalData, setOrderModalData] = useState<TOrder | null>(null);
 
@@ -25,7 +27,14 @@ export const BurgerConstructor: FC = () => {
   );
 
   const onOrderClick = async () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (orderRequest) return;
+    if (!constructorItems.bun || constructorItems.ingredients.length === 0) {
+      return;
+    }
+    if (!user) {
+      navigate('/login');
+      return;
+    }
 
     setOrderRequest(true);
 

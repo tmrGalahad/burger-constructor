@@ -2,6 +2,7 @@ import { FC, useState, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ForgotPasswordUI } from '@ui-pages';
+import { forgotPasswordApi } from '../../utils/burger-api';
 
 export const ForgotPassword: FC = () => {
   const [email, setEmail] = useState('');
@@ -9,8 +10,18 @@ export const ForgotPassword: FC = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setError(null);
+
+    try {
+      await forgotPasswordApi(email);
+      navigate('/reset-password', { state: { email } });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err : new Error('Не удалось отправить письмо')
+      );
+    }
   };
 
   return (

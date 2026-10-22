@@ -51,6 +51,26 @@ export const getOrders = async (): Promise<TOrdersData> => {
   };
 };
 
+export const getOrderByNumberApi = async (number: number): Promise<TOrder> => {
+  const data = await getOrders();
+
+  const feedOrder = data.orders.find((item) => item.number === number);
+
+  if (feedOrder) return feedOrder;
+
+  const accessToken = localStorage.getItem('accessToken')?.trim();
+
+  if (accessToken) {
+    const userOrders = await getUserOrdersApi();
+
+    const userOrder = userOrders.find((item) => item.number === number);
+
+    if (userOrder) return userOrder;
+  }
+
+  throw new Error(`Заказ №${number} не найден`);
+};
+
 export const getUserOrdersApi = async (): Promise<TOrder[]> => {
   const accessToken = localStorage.getItem('accessToken')?.trim();
 
@@ -155,6 +175,44 @@ export const registerApi = async (
     refreshToken: data.refresh_token,
     user: data.user
   };
+};
+
+export const forgotPasswordApi = async (email: string) => {
+  const response = await fetch(`${BURGER_API_URL}/password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(
+      data.message || 'Не удалось отправить письмо для восстановления пароля'
+    );
+  }
+
+  return data;
+};
+
+export const resetPasswordApi = async (password: string, token: string) => {
+  const response = await fetch(`${BURGER_API_URL}/password-reset/reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ password, token })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || 'Не удалось изменить пароль');
+  }
+
+  return data;
 };
 
 export const refreshTokenApi = async (refreshToken: string) => {

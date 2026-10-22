@@ -35,7 +35,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
         ? ingredientsInfo.length - maxIngredients
         : 0;
 
-    const date = new Date(order.createdAt);
+    const date = new Date((order as any).created_at ?? order.createdAt);
     return {
       ...order,
       ingredientsInfo,

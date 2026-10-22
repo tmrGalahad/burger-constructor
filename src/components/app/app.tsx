@@ -4,7 +4,9 @@ import {
   Profile,
   ProfileOrders,
   Login,
-  Register
+  Register,
+  ForgotPassword,
+  ResetPassword
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
@@ -15,6 +17,7 @@ import { fetchIngredients } from '../../services/ingredientsSlice';
 import { restoreUser } from '../../services/userSlice';
 import { Routes, Route } from 'react-router-dom';
 import { OrderInfo } from '../order-info/order-info';
+import { IngredientDetails } from '../ingredient-details';
 
 const App: FC = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,7 @@ const App: FC = () => {
       <AppHeader />
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
@@ -68,6 +72,23 @@ const App: FC = () => {
           element={
             <ProtectedRoute onlyUnAuth>
               <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ResetPassword />
             </ProtectedRoute>
           }
         />

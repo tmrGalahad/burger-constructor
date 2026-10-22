@@ -25,7 +25,7 @@ export const Login: FC = () => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       dispatch(setUser(data.user));
-      navigate('/profile');
+      navigate('/');
     } catch (error) {
       setErrorText(error instanceof Error ? error.message : 'Не удалось войти');
     }
