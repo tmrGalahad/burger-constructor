@@ -9,11 +9,10 @@ import { getOrderByNumberApi } from '../../utils/burger-api';
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
   const { number } = useParams();
-
+  // ff
   const feedOrders = useSelector((state) => state.feed.orders);
   const userOrders = useSelector((state) => state.orders.orders);
   const ingredients = useSelector((state) => state.ingredients.items);
-
   const orderFromStore = useMemo(
     () =>
       [...feedOrders, ...userOrders].find(
