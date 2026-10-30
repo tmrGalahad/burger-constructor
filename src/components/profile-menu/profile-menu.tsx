@@ -12,10 +12,11 @@ export const ProfileMenu: FC = () => {
 
   const handleLogout = async () => {
     const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem('accessToken');
 
     try {
-      if (refreshToken) {
-        await logoutApi(refreshToken);
+      if (refreshToken && accessToken) {
+        await logoutApi(refreshToken, accessToken);
       }
     } catch (error) {
     } finally {

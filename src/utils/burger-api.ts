@@ -260,11 +260,12 @@ export const getUserApi = async (accessToken: string): Promise<TUser> => {
   return data.user as TUser;
 };
 
-export const logoutApi = async (refreshToken: string) => {
+export const logoutApi = async (refreshToken: string, accessToken: string) => {
   const response = await fetch(`${BURGER_API_URL}/auth/logout`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: accessToken
     },
     body: JSON.stringify({ token: refreshToken })
   });
