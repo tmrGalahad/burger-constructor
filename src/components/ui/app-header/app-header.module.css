@@ -16,13 +16,17 @@
 }
 
 .link {
-  display: flex;
-  text-decoration: none;
-  color: var(--text-inactive-color);
+    display: flex;
+    text-decoration: none;
+    color: #f2f2f3;
 }
 
 .link_active {
-  color: var(--text-primary-color);
+    color: #8585ad;
+}
+
+.link_text {
+    color: inherit;
 }
 
 .link_position_last {

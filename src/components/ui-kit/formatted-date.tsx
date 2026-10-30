@@ -36,6 +36,12 @@ const isToday = (date: Date) => getDiffDays(date) === 0;
 const isYesterday = (date: Date) => getDiffDays(date) === 1;
 
 export const FormattedDate: FC<FormattedDateProps> = ({ date, className }) => {
+  const diffDays = getDiffDays(date);
+
+  if (diffDays < 0) {
+    return <span className={className}>Сегодня, {getFormattedTime(date)}</span>;
+  }
+
   if (isToday(date)) {
     return <span className={className}>Сегодня, {getFormattedTime(date)}</span>;
   }
